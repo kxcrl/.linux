@@ -48,7 +48,7 @@ plugins=(archlinux git ruby rails3 gem rake github heroku rbenv redis-cli vi-mod
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
-export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/core_perl:/home/kix/.gem/ruby/2.0.0/bin
+export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/core_perl:/home/jeramy/.gem/ruby/2.0.0/bin
 
 # A shortcut function that simplifies usage of xclip.
 # - Accepts input from either stdin (pipe), or params.
