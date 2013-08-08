@@ -115,4 +115,4 @@ bindkey "^[OH" beginning-of-line
 bindkey "^[OF" end-of-line
 
 #Archbey
-# archbey -c "blue"
+archbey -c "green"
