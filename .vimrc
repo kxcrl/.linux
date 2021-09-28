@@ -51,7 +51,7 @@ set winheight=5
 set winminheight=5
 set winheight=999
 
-colorscheme molokai
+colorscheme desert
 set background=dark " or light
 set t_Co=256
 
@@ -69,28 +69,6 @@ set expandtab
 set nowrap
 set textwidth=79
 set formatoptions=n
-
-"  ---------------------------------------------------------------------------
-"  Status Line
-"  ---------------------------------------------------------------------------
-
-" path
-set statusline=%f
-" flags
-set statusline+=%m%r%h%w
-" git branch
-set statusline+=\ %{fugitive#statusline()}
-" encoding
-set statusline+=\ [%{strlen(&fenc)?&fenc:&enc}]
-" line x of y
-set statusline+=\ [line\ %l\/%L]
-
-" Colour
-hi StatusLine ctermfg=Black ctermbg=White
-
-" Change colour of statusline in insert mode
-au InsertEnter * hi StatusLine ctermbg=DarkBlue
-au InsertLeave * hi StatusLine ctermfg=Black ctermbg=White
 
 "  ---------------------------------------------------------------------------
 "  Mappings
@@ -117,18 +95,6 @@ nmap N Nzz
 
 imap <C-h> <ESC>^
 imap <C-l> <ESC>$
-
-" Turn off arrow keys (this might not be a good idea for beginners, but it is
-" the best way to ween yourself of arrow keys on to hjkl)
-" http://yehudakatz.com/2010/07/29/everyone-who-tried-to-convince-me-to-use-vim-was-wrong/
-nnoremap <Left> :echoe "Use h"<CR>
-nnoremap <Right> :echoe "Use l"<CR>
-nnoremap <Up> :echoe "Use k"<CR>
-nnoremap <Down> :echoe "Use j"<CR>"
-inoremap <up> <nop>
-inoremap <down> <nop>
-inoremap <left> <nop>
-inoremap <right> <nop>
 
 nnoremap j gj
 nnoremap k gk
@@ -191,35 +157,8 @@ map <C-v> "+gP<CR>
 vmap <C-c> "+y
 
 "  ---------------------------------------------------------------------------
-"  Function Keys
-"  ---------------------------------------------------------------------------
-
-" F2 - Terminal
-map <F2> :ConqueTerm zsh<CR>
-
-" F3 - YankRing
-nnoremap <silent> <F3> :YRShow<cr>
-inoremap <silent> <F3> <ESC>:YRShow<cr>
-
-" Press F5 to remove extra whitespace
-nnoremap <silent> <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
-
-" indent file and return cursor and center cursor
-map   <silent> <F6> mmgg=G`m^zz
-imap  <silent> <F6> <Esc> mmgg=G`m^zz
-
-"  ---------------------------------------------------------------------------
 "  Plugins
 "  ---------------------------------------------------------------------------
-
-" Command-T
-" find file
-map <leader>f :CommandTFlush<cr>\|:CommandT<cr>
-
-" find file in current directory
-map <leader>gf :CommandTFlush<cr>\|:CommandT %%<cr>
-
-let g:CommandTMaxHeight = 20
 
 " NERDTree
 let NERDTreeShowBookmarks = 0
@@ -233,19 +172,14 @@ let NERDTreeDirArrows = 1
 " open file browser
 map <leader>p :NERDTreeToggle<cr>
 
-" TagList
-set tags=./tags;
-" Support for https://github.com/ivalkeen/guard-ctags-bundler
-set tags+=gems.tags
-map <leader>l :TlistToggle <cr>
-let Tlist_Use_Right_Window = 1
-let Tlist_WinWidth = 60
-" Generate ctags for all bundled gems as well
-map <leader>rt :!ctags --extra=+f --languages=-javascript --exclude=.git --exclude=log -R * `rvm gemdir`/gems/* `rvm gemdir`/bundler/gems/*<CR><C-M>
+" AutoFormat
+noremap <leader>a :Autoformat<CR>
 
-" Use only current file to autocomplete from tags
-" set complete=.,t
-set complete=.,w,b,u,t,i
+" Syntastic
+let g:syntastic_elixir_checkers = []
+
+" open file browser
+map <leader>n :NERDTreeToggle<CR>
 
 " Buffer window (find file in open buffers)
 nmap <silent> <leader>b :FufBuffer<CR>
@@ -254,96 +188,15 @@ nmap <silent> <leader>b :FufBuffer<CR>
 let g:AutoClosePairs = {'(': ')', '{': '}', '[': ']', '"': '"', "'": "'", '#{': '}'}
 let g:AutoCloseProtectedRegions = ["Character"]
 
-let my_home = expand("$HOME/")
-
-if filereadable(my_home . '.vim/bundle/vim-autocorrect/autocorrect.vim')
-  source ~/.vim/bundle/vim-autocorrect/autocorrect.vim
-endif
-
-" BLAAAME
-vmap <Leader>gb :<C-U>!git blame <C-R>=expand("%:p") <CR> \| sed -n <C-R>=line("'<") <CR>,<C-R>=line("'>") <CR>p<CR>
-
-" Tabularize
-if exists(":Tab")
-  nmap <leader>a\| :Tab /\|<CR>
-  vmap <leader>a\| :Tab /\|<CR>
-  nmap <leader>a= :Tab /=<CR>
-  vmap <leader>a= :Tab /=<CR>
-  nmap <leader>a: :Tab /:\zs<CR>
-  vmap <leader>a: :Tab /:\zs<CR>
-endif
-
-let g:cssColorVimDoNotMessMyUpdatetime = 1
-
 " Easy commenting
 nnoremap // :TComment<CR>
 vnoremap // :TComment<CR>
 
-" Supertab
-let g:SuperTabContextDefaultCompletionType = "<c-x><c-o>"
-
-" Syntastic
-" let g:syntastic_auto_loc_list=1
-" let g:syntastic_auto_jump=1
-
-"  ---------------------------------------------------------------------------
-"  Ruby/Rails
-"  ---------------------------------------------------------------------------
-
-" Execute current buffer as ruby
-map <S-r> :w !ruby<CR>
-
-map <leader>gv :CommandTFlush<cr>\|:CommandT app/views<cr>
-map <leader>gc :CommandTFlush<cr>\|:CommandT app/controllers<cr>
-map <leader>gm :CommandTFlush<cr>\|:CommandT app/models<cr>
-map <leader>gh :CommandTFlush<cr>\|:CommandT app/helpers<cr>
-map <leader>gl :CommandTFlush<cr>\|:CommandT lib<cr>
-map <leader>gp :CommandTFlush<cr>\|:CommandT public<cr>
-map <leader>gs :CommandTFlush<cr>\|:CommandT public/stylesheets<cr>
-map <leader>ga :CommandTFlush<cr>\|:CommandT app/assets<cr>
-
-" View routes or Gemfile in large split
-map <leader>gr :topleft :split config/routes.rb<cr>
-map <leader>gg :topleft 100 :split Gemfile<cr>
-
-" Skip to Model, View or Controller
-map <Leader>m :Rmodel
-map <Leader>v :Rview
-map <Leader>c :Rcontroller
-
-" Other files to consider Ruby
-au BufRead,BufNewFile Gemfile,Rakefile,Thorfile,config.ru,Vagrantfile,Guardfile,Capfile set ft=ruby
-
-"  ---------------------------------------------------------------------------
-"  CoffeeScript
-"  ---------------------------------------------------------------------------
-
-let coffee_compile_vert = 1
-au BufNewFile,BufReadPost *.coffee setl foldmethod=indent
-
-"  ---------------------------------------------------------------------------
-"  SASS / SCSS
-"  ---------------------------------------------------------------------------
-
-au BufNewFile,BufReadPost *.scss setl foldmethod=indent
-au BufNewFile,BufReadPost *.sass setl foldmethod=indent
-au BufRead,BufNewFile *.scss set filetype=scss
-
-"  ---------------------------------------------------------------------------
-"  GUI
-"  ---------------------------------------------------------------------------
-
-if has("gui_running")
-  set guioptions-=T " no toolbar set guioptions-=m " no menus
-  set guioptions-=r " no scrollbar on the right
-  set guioptions-=R " no scrollbar on the right
-  set guioptions-=l " no scrollbar on the left
-  set guioptions-=b " no scrollbar on the bottom
-  set guioptions=aiA
-  set mouse=v
-  set guifont=Monaco:h12 "<- Maybe a good idea when using mac
-endif
-set guifont=Monaco:h12
+" CtrlP
+let g:ctrlp_custom_ignore = {
+  \ 'dir': '\.git$\|build$\|node_modules\|dist\|target\|_build\|deps',
+  \ 'file': '\v\.(exe|so|dell)$',
+  \ }
 
 "  ---------------------------------------------------------------------------
 "  Directories
@@ -351,18 +204,6 @@ set guifont=Monaco:h12
 
 set backupdir=~/tmp,/tmp
 set undodir=~/.vim/.tmp,~/tmp,~/.tmp,/tmp
-
-" Ctags path (brew install ctags)
-let Tlist_Ctags_Cmd = 'ctags'
-
-" Make Vim use RVM correctly when using Zsh
-" https://rvm.beginrescueend.com/integration/vim/
-set shell=/bin/sh
-
-" Finally, load custom configs
-if filereadable(my_home . '.vimrc.local')
-  source ~/.vimrc.local
-endif
 
 "  ---------------------------------------------------------------------------
 "  Misc
@@ -375,3 +216,7 @@ autocmd! bufwritepost vimrc source %
 " Show trailing whitepace and spaces before a tab:
 highlight ExtraWhitespace ctermbg=red guibg=red
 autocmd Syntax * syn match ExtraWhitespace /\s\+$\| \+\ze\t/ containedin=ALL
+
+" Copy and paste from clipboard
+vnoremap <leader>c :w !pbcopy<CR><CR>
+noremap <leader>v :r !pbpaste<CR><CR>
